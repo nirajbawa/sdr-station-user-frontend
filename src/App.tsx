@@ -16,9 +16,9 @@ function App() {
           <img src={viteLogo} className="vite" alt="Vite logo" />
         </div>
         <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.tsx</code> and save to test <code>HMR</code>
+          <h1 className="text-4xl font-bold text-blue-600 underline">Get started</h1>
+          <p className="mt-4 text-gray-500 bg-gray-100 p-2 rounded">
+            Edit <code className="text-pink-500">src/App.tsx</code> and save to test <code>HMR</code>
           </p>
         </div>
         <button
