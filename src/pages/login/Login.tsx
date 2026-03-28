@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Button } from '../../components/ui/button'
 import { Input } from '../../components/ui/input'
 import { Label } from '../../components/ui/label'
-import { Shield, Lock, Wifi, AlertCircle, TrendingUp, Database, ArrowRight, Cpu } from 'lucide-react'
+import { Shield, Lock, AlertCircle, TrendingUp, Database, ArrowRight, Cpu } from 'lucide-react'
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "../../components/ui/input-otp"
 import { useNavigate } from 'react-router'
 import { useAuthStore } from '../../store/authStore'
@@ -22,11 +22,18 @@ export default function Login(): React.JSX.Element {
   const bgImage = '/login_bg.png'
 
   const handleAuthSuccess = async (data: any): Promise<void> => {
-    const token = data.access_token || data?.data?.access_token
-    const refreshToken = data.refresh_token || data?.data?.refreshToken || data?.data?.refresh_token
-    const user = data.user || data?.data?.user || {}
+    // The response data contains { user: {...}, access_token: "..." }
+    const token = data.access_token
+    const refreshToken = data.refresh_token || "" // Use empty string if not provided
+    const user = data.user || {}
 
     if (token) {
+      if (user.role !== 'station_user') {
+        setErrorMsg('Access Restricted: Only Station Users are authorized to access this dashboard.')
+        setIsLoading(false)
+        return
+      }
+
       if (window.api) {
         try {
           await window.api.registerLogin(user.email)
@@ -38,7 +45,7 @@ export default function Login(): React.JSX.Element {
       useAuthStore.getState().setCredentials(token, refreshToken, user)
       navigate('/dashboard')
     } else {
-      throw new Error('Authentication failed: No token received')
+      throw new Error('Authentication failed: No token received from server.')
     }
   }
 
@@ -71,7 +78,7 @@ export default function Login(): React.JSX.Element {
   }
 
   return (
-    <div className="h-screen w-full bg-slate-50 dark:bg-[#020617] flex overflow-hidden lg:selection:bg-primary/30 transition-colors duration-500">
+    <div className="h-screen w-full bg-background flex overflow-hidden lg:selection:bg-primary/30 transition-colors duration-500">
       <div className="w-full h-full flex flex-col md:flex-row animate-in fade-in duration-700">
         
         {/* BRAND PANEL - Always Dark for consistent Brand Authority */}
@@ -151,15 +158,26 @@ export default function Login(): React.JSX.Element {
         </div>
 
         {/* LOGIN FORM PANEL - Theme Responsive */}
-        <div className="w-full md:w-[50%] lg:w-[40%] flex flex-col justify-center px-6 sm:px-12 md:px-16 lg:px-24 py-12 bg-white dark:bg-zinc-950/20 backdrop-blur-3xl transition-colors duration-500">
-          <div className="max-w-[380px] w-full mx-auto space-y-8">
+        <div className="w-full md:w-[50%] lg:w-[40%] flex flex-col justify-center px-6 sm:px-12 md:px-16 lg:px-24 py-12 bg-background transition-colors duration-500 relative overflow-y-auto">
+          {/* Mobile Branding - Only visible on small screens */}
+          <div className="md:hidden flex flex-col items-center mb-10 space-y-3">
+            <div className="w-14 h-14 bg-zinc-900 rounded-2xl flex items-center justify-center border border-white/10 shadow-xl">
+              <Shield className="w-7 h-7 text-white" />
+            </div>
+            <div className="text-center">
+              <h1 className="text-xl font-black text-white tracking-tighter uppercase italic">SDR Intelligence</h1>
+              <p className="text-[8px] font-black text-zinc-500 uppercase tracking-[0.3em]">Station Control Node</p>
+            </div>
+          </div>
+
+          <div className="max-w-[400px] w-full mx-auto space-y-8">
             
             {/* Header */}
             <div>
-              <h2 className="text-3xl font-bold text-slate-900 dark:text-white tracking-tight">
-                {otpRequested ? "Verify Station ID" : "Station Login"}
+              <h2 className="text-2xl md:text-3xl font-black text-foreground tracking-tight uppercase">
+                {otpRequested ? "Neural Verification" : "Station Access"}
               </h2>
-              <p className="text-slate-600 dark:text-slate-400 mt-2 text-sm leading-relaxed">
+              <p className="text-muted-foreground mt-2 text-sm leading-relaxed">
                 {otpRequested 
                   ? "Enter the verification code sent to your station-registered device." 
                   : "Access the decentralized station node repository."}
@@ -173,29 +191,27 @@ export default function Login(): React.JSX.Element {
                   <AlertCircle className="w-5 h-5 text-red-600 dark:text-red-500 shrink-0" />
                   <p className="text-xs font-medium text-red-900 dark:text-red-100">{errorMsg}</p>
                 </div>
-              )}
-
-              {!otpRequested ? (
+              )}              {!otpRequested ? (
                 <div className="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
                   <div className="space-y-2">
-                    <Label htmlFor="email" className="text-slate-600 dark:text-slate-300 ml-1 text-xs font-semibold">Email Address</Label>
+                    <Label htmlFor="email" className="text-muted-foreground ml-1 text-[10px] font-black uppercase tracking-widest">Administrator Email</Label>
                     <Input
                       id="email"
                       type="email"
                       placeholder="john@district.gov"
-                      className="h-12 bg-slate-50 dark:bg-white/5 border-slate-200 dark:border-white/10 rounded-xl focus:ring-blue-500 focus:border-blue-500 text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-600 transition-all font-medium"
+                      className="h-12 bg-muted/30 border-border rounded-xl focus:ring-0 focus:border-primary/20 text-foreground placeholder:text-muted-foreground/30 transition-all font-bold"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       required
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="password" title="password" className="text-slate-600 dark:text-slate-300 ml-1 text-xs font-semibold">Access Key</Label>
+                    <Label htmlFor="password" title="password" className="text-muted-foreground ml-1 text-[10px] font-black uppercase tracking-widest">Intelligence Key</Label>
                     <Input
                       id="password"
                       type="password"
                       placeholder="••••••••"
-                      className="h-12 bg-slate-50 dark:bg-white/5 border-slate-200 dark:border-white/10 rounded-xl focus:ring-blue-500 focus:border-blue-500 text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-600 transition-all font-medium"
+                      className="h-12 bg-muted/30 border-border rounded-xl focus:ring-0 focus:border-primary/20 text-foreground placeholder:text-muted-foreground/30 transition-all font-bold"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       required
@@ -205,23 +221,23 @@ export default function Login(): React.JSX.Element {
               ) : (
                 <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
                   <div className="flex justify-between items-center ml-1">
-                    <Label className="text-slate-600 dark:text-slate-300 text-xs font-semibold">OTP Verification</Label>
+                    <Label className="text-muted-foreground text-[10px] font-black uppercase tracking-widest">Protocol Code</Label>
                     <button 
                       type="button" 
                       onClick={() => setOtpRequested(false)}
-                      className="text-blue-600 dark:text-primary hover:text-blue-700 dark:hover:text-primary/80 text-xs font-semibold underline-offset-4 hover:underline transition-all"
+                      className="text-primary hover:opacity-80 text-[10px] font-black uppercase tracking-widest underline-offset-4 hover:underline transition-all"
                     >
-                      Use different account
+                      Reset Auth
                     </button>
                   </div>
                   <div className="flex justify-center">
                     <InputOTP maxLength={6} value={otp} onChange={setOtp}>
-                      <InputOTPGroup className="gap-3">
+                      <InputOTPGroup className="gap-2 md:gap-3">
                         {[0, 1, 2, 3, 4, 5].map((i) => (
                           <InputOTPSlot 
                             key={i} 
                             index={i} 
-                            className="w-12 h-14 bg-slate-50 dark:bg-white/5 border-slate-200 dark:border-white/10 text-slate-900 dark:text-white text-xl font-bold rounded-xl ring-offset-white dark:ring-offset-slate-950 focus:ring-blue-500" 
+                            className="w-10 h-12 md:w-12 md:h-14 bg-muted/30 border-border text-foreground text-lg md:text-xl font-black rounded-xl focus:ring-0" 
                           />
                         ))}
                       </InputOTPGroup>
@@ -229,14 +245,14 @@ export default function Login(): React.JSX.Element {
                   </div>
                 </div>
               )}
-
+ 
               <Button 
                 type="submit" 
                 className={cn(
-                  "w-full h-12 rounded-xl text-sm font-bold transition-all duration-300 shadow-lg active:scale-[0.98]",
+                  "w-full h-14 rounded-xl text-[10px] font-black uppercase tracking-[0.2em] transition-all duration-300 shadow-2xl active:scale-[0.98]",
                   otpRequested 
-                    ? "bg-emerald-600 hover:bg-emerald-500 text-white shadow-emerald-500/20" 
-                    : "bg-blue-600 hover:bg-blue-500 text-white shadow-blue-500/20"
+                    ? "bg-emerald-600 hover:bg-emerald-500 text-white shadow-emerald-900/20" 
+                    : "bg-btn text-btn-text hover:opacity-90 shadow-lg"
                 )}
                 disabled={isLoading}
               >
@@ -256,18 +272,7 @@ export default function Login(): React.JSX.Element {
 
             {/* Footer */}
             <div className="pt-8 flex flex-col items-center gap-6">
-              <div className="flex items-center gap-8 text-slate-400 dark:text-slate-500">
-                <div className="flex items-center gap-2">
-                  <Wifi className="w-3.5 h-3.5" />
-                  <span className="text-[10px] font-bold uppercase tracking-widest leading-none">Offline Ready</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Lock className="w-3.5 h-3.5" />
-                  <span className="text-[10px] font-bold uppercase tracking-widest leading-none">AES-256</span>
-                </div>
-              </div>
-              
-              <div className="text-[10px] text-slate-400 dark:text-slate-600 text-center uppercase tracking-widest leading-relaxed">
+              <div className="text-[10px] text-muted-foreground text-center uppercase tracking-widest leading-relaxed">
                 Emergency Hotline: 9359839551 <br />
                 Technical Support: nirajbava222@gmail.com
               </div>

@@ -19,7 +19,7 @@ export const useAuthStore = create<AuthState>()(
       logout: () => set({ token: null, refreshToken: null, user: null }),
     }),
     {
-      name: 'auth-storage',
+      name: 'sdr-auth-storage',
       storage: createJSONStorage(() => localStorage),
     }
   )

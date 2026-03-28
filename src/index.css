@@ -1,27 +1,41 @@
 @import "tailwindcss";
 
 @theme {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  /* Custom Element colors based on user request */
+  --color-sidebar: var(--sidebar-bg);
+  --color-element: var(--element-bg);
+  --color-element-border: var(--element-border);
+  --color-btn: var(--btn-bg);
+  --color-btn-text: var(--btn-text);
+
   @keyframes caret-blink {
-    0%,
-    70%,
-    100% {
-      opacity: 1;
-    }
-    20%,
-    50% {
-      opacity: 0;
-    }
+    0%, 70%, 100% { opacity: 1; }
+    20%, 50% { opacity: 0; }
   }
   
   @keyframes pulse-glow {
-    0%, 100% {
-      opacity: 0.5;
-      transform: scale(1);
-    }
-    50% {
-      opacity: 1;
-      transform: scale(1.05);
-    }
+    0%, 100% { opacity: 0.5; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.05); }
   }
 
   @keyframes float {
@@ -35,51 +49,83 @@
 }
 
 :root {
-  --background: 0 0% 100%;
-  --foreground: 222.2 84% 4.9%;
-  --card: 0 0% 100%;
-  --card-foreground: 222.2 84% 4.9%;
-  --popover: 0 0% 100%;
-  --popover-foreground: 222.2 84% 4.9%;
-  --primary: 221.2 83.2% 53.3%;
-  --primary-foreground: 210 40% 98%;
-  --secondary: 210 40% 96.1%;
-  --secondary-foreground: 222.2 47.4% 11.2%;
-  --muted: 210 40% 96.1%;
-  --muted-foreground: 215.4 16.3% 46.9%;
-  --accent: 210 40% 96.1%;
-  --accent-foreground: 222.2 47.4% 11.2%;
-  --destructive: 0 84.2% 60.2%;
-  --destructive-foreground: 210 40% 98%;
-  --border: 214.3 31.8% 91.4%;
-  --input: 214.3 31.8% 91.4%;
-  --ring: 221.2 83.2% 53.3%;
+  --background: #ffffff;
+  --foreground: #171717;
+  
+  --card: #ffffff;
+  --card-foreground: #171717;
+  
+  --popover: #ffffff;
+  --popover-foreground: #171717;
+  
+  --primary: #171717;
+  --primary-foreground: #ffffff;
+  
+  --secondary: #f5f5f5;
+  --secondary-foreground: #171717;
+  
+  --muted: #f5f5f5;
+  --muted-foreground: #737373;
+  
+  --accent: #f5f5f5;
+  --accent-foreground: #171717;
+  
+  --destructive: #ef4444;
+  --destructive-foreground: #ffffff;
+  
+  --border: #e5e5e5;
+  --input: #e5e5e5;
+  --ring: #171717;
   --radius: 0.5rem;
-  --glass: rgba(0, 0, 0, 0.03);
-  --glass-border: rgba(0, 0, 0, 0.1);
+ 
+  /* Specific elements */
+  --element-bg: #ffffff;
+  --element-border: #e5e5e5;
+  --sidebar-bg: #ffffff;
+  --btn-bg: #171717;
+  --btn-text: #ffffff;
+ 
+  --glass: rgba(255, 255, 255, 0.7);
+  --glass-border: rgba(0, 0, 0, 0.05);
 }
-
+ 
 .dark {
-  --background: 222.2 84% 4.9%;
-  --foreground: 210 40% 98%;
-  --card: 222.2 84% 4.9%;
-  --card-foreground: 210 40% 98%;
-  --popover: 222.2 84% 4.9%;
-  --popover-foreground: 210 40% 98%;
-  --primary: 217.2 91.2% 59.8%;
-  --primary-foreground: 222.2 47.4% 11.2%;
-  --secondary: 217.2 32.6% 17.5%;
-  --secondary-foreground: 210 40% 98%;
-  --muted: 217.2 32.6% 17.5%;
-  --muted-foreground: 215 20.2% 65.1%;
-  --accent: 217.2 32.6% 17.5%;
-  --accent-foreground: 210 40% 98%;
-  --destructive: 0 62.8% 30.6%;
-  --destructive-foreground: 210 40% 98%;
-  --border: 217.2 32.6% 17.5%;
-  --input: 217.2 32.6% 17.5%;
-  --ring: 224.3 76.3% 48%;
-  --glass: rgba(255, 255, 255, 0.03);
+  --background: #000000;
+  --foreground: #ffffff;
+  
+  --card: #171717;
+  --card-foreground: #ffffff;
+  
+  --popover: #171717;
+  --popover-foreground: #ffffff;
+  
+  --primary: #ffffff;
+  --primary-foreground: #171717;
+  
+  --secondary: #262626;
+  --secondary-foreground: #ffffff;
+  
+  --muted: #262626;
+  --muted-foreground: #a3a3a3;
+  
+  --accent: #262626;
+  --accent-foreground: #ffffff;
+  
+  --destructive: #7f1d1d;
+  --destructive-foreground: #ffffff;
+  
+  --border: #262626;
+  --input: #262626;
+  --ring: #ffffff;
+ 
+  /* Specific elements */
+  --element-bg: #171717;
+  --element-border: rgba(255, 255, 255, 0.1);
+  --sidebar-bg: #171717;
+  --btn-bg: #e5e5e5;
+  --btn-text: #000000;
+ 
+  --glass: rgba(23, 23, 23, 0.7);
   --glass-border: rgba(255, 255, 255, 0.1);
 }
 
@@ -109,8 +155,8 @@
   font-weight: 400;
 
   color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  color: var(--foreground);
+  background-color: var(--background);
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -120,13 +166,26 @@
 
 body {
   margin: 0;
-  display: flex;
-  place-items: center;
   min-width: 320px;
   min-height: 100vh;
+  background-color: var(--background);
+  color: var(--foreground);
 }
 
 #root {
   width: 100%;
   height: 100%;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 10px;
 }
