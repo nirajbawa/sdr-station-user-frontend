@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router'
-import { Users, LogOut, ChevronLeft, ChevronRight, Shield, User, Search, Sparkles, Menu, X, Sun, Moon } from 'lucide-react'
+import { LogOut, ChevronLeft, ChevronRight, Shield, User, Search, Sparkles, Menu, X, Sun, Moon } from 'lucide-react'
 import { cn } from '../lib/utils'
 import { useAuthStore } from '../store/authStore'
 import { useTheme } from '../hooks/useTheme'
